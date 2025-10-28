@@ -1,12 +1,22 @@
 # PyroXa: Chemical Kinetics & Reactor Simulation
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://img.shields.io/pypi/v/pyroxa.svg)](https://pypi.org/project/pyroxa/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)]()
 [![CI Tests](https://github.com/nikunjagarwal17/pyroxa/workflows/CI%20Tests/badge.svg)](https://github.com/nikunjagarwal17/pyroxa/actions)
-[![GitHub release](https://img.shields.io/github/v/release/nikunjagarwal17/pyroxa)](https://github.com/nikunjagarwal17/pyroxa/releases)
+[![Downloads](https://img.shields.io/pypi/dm/pyroxa.svg)](https://pypi.org/project/pyroxa/)
 
-A pure Python library for chemical kinetics and reactor simulation. Built for students, researchers, and industry professionals.
+A pure Python library for chemical kinetics and reactor simulation. Built for students, researchers, and industry professionals. **Now available on PyPI!**
+
+---
+
+## 🚀 Quick Install
+
+```bash
+pip install pyroxa
+```
+
+Start using PyroXa in seconds - no compilation, no hassle!
 
 ---
 
@@ -25,27 +35,46 @@ A pure Python library for chemical kinetics and reactor simulation. Built for st
 
 ## Installation
 
+### From PyPI (Recommended)
+
+PyroXa is now available on PyPI! Install with a single command:
+
+```bash
+pip install pyroxa
+```
+
+That's it! You can now import and use PyroXa in your Python projects.
+
+### Verify Installation
+
+```bash
+python -c "import pyroxa; print(f'PyroXa v{pyroxa.__version__} installed successfully!')"
+```
+
+### From Source (For Development)
+
+If you want to contribute or modify the source code:
+
 ```bash
 git clone https://github.com/nikunjagarwal17/pyroxa.git
-cd pyroxa/project
-pip install -r requirements.txt
+cd pyroxa
 pip install -e .
 ```
 
 **Requirements**: Python 3.8+, NumPy, SciPy, Matplotlib (optional), PyYAML
 
-**What does `pip install -e .` do?**  
-It uses `setup.py` to install PyroXa in "editable" mode, allowing you to modify the source code and see changes immediately without reinstalling.
-
-**Alternative installation methods:**
-- Standard install: `pip install .` (uses setup.py for permanent installation)
-- Direct from setup.py: `python setup.py install` (legacy method, not recommended)
-
-See [INSTALLATION_GUIDE.md](./INSTALLATION_GUIDE.md) for detailed instructions.
+See [INSTALLATION_GUIDE.md](./INSTALLATION_GUIDE.md) for detailed instructions and troubleshooting.
 
 ---
 
-## Quick Example
+## Quick Start
+
+### Installation
+```bash
+pip install pyroxa
+```
+
+### Basic Usage
 
 ```python
 import pyroxa
@@ -63,7 +92,7 @@ volume = pyroxa.cstr_volume(flow_rate=10.0, rate_constant=0.5, conversion=0.8, o
 print(f"CSTR volume: {volume:.2f} volume units")
 
 # PFR - calculate volume for target conversion
-pfr_vol = pyroxa.pfr_volume(flow_rate=10.0, rate_constant=0.5, conversion=0.8, order=1)
+pfr_vol = pyroxa.pfr_volume(F_A0=10.0, X=0.8, C_A0=1.0, k=0.5, order=1)
 print(f"PFR volume: {pfr_vol:.2f} volume units")
 
 # Heat capacity using NASA polynomials
@@ -71,7 +100,7 @@ cp = pyroxa.heat_capacity_nasa(T=500.0, coeffs=[3.298677, 0.0014082404, -3.96322
 print(f"Heat capacity: {cp:.2f} J/mol/K")
 ```
 
-More examples in [`examples/`](./examples/) folder.
+More examples in [`examples/`](./examples/) folder and on [PyPI](https://pypi.org/project/pyroxa/).
 
 ---
 
@@ -126,6 +155,12 @@ docs/                # Documentation
 - **Researchers**: Mechanism validation, parameter estimation, model development
 - **Industry**: Reactor design, optimization, scale-up, safety analysis
 
+**Get started in seconds:**
+```bash
+pip install pyroxa
+python -c "import pyroxa; print(pyroxa.arrhenius_rate(A=1e10, Ea=50000, T=298.15))"
+```
+
 ---
 
 ## Contributing
@@ -138,7 +173,17 @@ Contributions welcome! Fork the repo, make changes, add tests, and submit a PR.
 
 **Nikunj Agarwal** ([@nikunjagarwal17](https://github.com/nikunjagarwal17)) - Lead Developer  
 **Contact**: [nikunjagarwal1704@gmail.com](mailto:nikunjagarwal1704@gmail.com)  
+**PyPI**: [pypi.org/project/pyroxa](https://pypi.org/project/pyroxa/)  
 **Issues**: [GitHub Issues](https://github.com/nikunjagarwal17/pyroxa/issues)
+
+---
+
+## Links
+
+- **PyPI Package**: https://pypi.org/project/pyroxa/
+- **GitHub Repository**: https://github.com/nikunjagarwal17/pyroxa
+- **Documentation**: [DOCUMENTATION.md](./DOCUMENTATION.md)
+- **Installation Guide**: [INSTALLATION_GUIDE.md](./INSTALLATION_GUIDE.md)
 
 ---
 
@@ -148,4 +193,4 @@ MIT License - see LICENSE file for details.
 
 ---
 
-**PyroXa v1.0.0** | Pure Python | Chemical Engineering Made Simple
+**PyroXa v1.0.0** | Pure Python | Chemical Engineering Made Simple | `pip install pyroxa`
