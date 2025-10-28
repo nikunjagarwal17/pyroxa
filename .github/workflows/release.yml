@@ -1,0 +1,134 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.0.0
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    name: Build PyroXa Distribution
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine wheel setuptools
+    
+    - name: Build wheel and source distribution
+      run: |
+        echo "Building PyroXa v1.0.0 - Pure Python Chemical Kinetics Library"
+        python -m build
+    
+    - name: List distribution files
+      run: |
+        echo "Distribution files created:"
+        ls -lh dist/
+    
+    - name: Test installation from wheel
+      run: |
+        pip install dist/*.whl
+        python -c "import pyroxa; print(f'PyroXa v{pyroxa.__version__} installed successfully')"
+        python -c "import pyroxa; k = pyroxa.arrhenius_rate(1e10, 50000, 298.15); print(f'Test function works: k={k:.2e}')"
+    
+    - name: Check distribution
+      run: |
+        twine check dist/*
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: pyroxa-v1.0.0-dist
+        path: dist/
+        retention-days: 90
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: dist/*
+        body: |
+          # PyroXa v1.0.0 - Pure Python Chemical Kinetics Library
+          
+          **Authors:** Nikunj Agarwal, Sahithi Kokkula
+          **Contact:** nikunjagarwal1704@gmail.com
+          
+          ## What's Included
+          
+          - 132+ functions for chemical kinetics and reactor simulation
+          - Batch, CSTR, PFR, Packed Bed, and Fluidized Bed reactors
+          - Thermodynamics, transport phenomena, and process safety tools
+          - Pure Python implementation - works on Windows, macOS, and Linux
+          - Python 3.8+ compatible
+          
+          ## Installation
+          
+          ```bash
+          pip install pyroxa-1.0.0-py3-none-any.whl
+          ```
+          
+          Or from source:
+          ```bash
+          pip install pyroxa-1.0.0.tar.gz
+          ```
+          
+          ## Quick Start
+          
+          ```python
+          import pyroxa
+          
+          # Calculate rate constant
+          k = pyroxa.arrhenius_rate(A=1e10, Ea=50000, T=298.15)
+          
+          # Calculate batch reactor time for 80% conversion
+          time = pyroxa.batch_reactor_time(initial_conc=1.0, final_conc=0.2, rate_constant=0.15, order=1)
+          print(f"Time required: {time:.2f} time units")
+          
+          # Calculate CSTR volume for 80% conversion
+          volume = pyroxa.cstr_volume(flow_rate=10.0, rate_constant=0.5, conversion=0.8, order=1)
+          print(f"CSTR volume: {volume:.2f} volume units")
+          ```
+          
+          ## Documentation
+          
+          - [README.md](https://github.com/nikunjagarwal17/pyroxa/blob/main/README.md)
+          - [Installation Guide](https://github.com/nikunjagarwal17/pyroxa/blob/main/INSTALLATION_GUIDE.md)
+          - [Function Documentation](https://github.com/nikunjagarwal17/pyroxa/blob/main/DOCUMENTATION.md)
+          
+          ## License
+          
+          MIT License - Free and open source!
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  publish-pypi:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: pyroxa-v1.0.0-dist
+        path: dist/
+    
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        skip-existing: true
+      continue-on-error: true  # Don't fail if PyPI upload is not configured

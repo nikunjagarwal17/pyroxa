@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "numpy>=1.19.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyroxa"
+version = "1.0.0"
+description = "Pure Python chemical kinetics and reactor simulation library - No compilation required!"
+authors = [
+    {name = "PyroXa Development Team"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+dependencies = [
+    "numpy>=1.19.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-cov"]
+docs = ["sphinx", "sphinx-rtd-theme"]
+
+[tool.cibuildwheel]
+# Build for common platforms
+build = ["cp38-*", "cp39-*", "cp310-*", "cp311-*", "cp312-*", "cp313-*"]
+skip = ["*-win32", "*-manylinux_i686", "*-musllinux*", "pp*"]
+
+# Environment variables
+environment = { PYROXA_PURE_PYTHON = "0" }
+
+# Install build dependencies
+before-build = [
+    "pip install --upgrade pip setuptools wheel",
+    "pip install numpy>=1.19.0 Cython>=3.0.0",
+]
+
+# Test command
+test-command = "python -c 'import pyroxa; print(f\"PyroXa {pyroxa.get_version()} imported successfully\")'"
+test-requires = ["numpy"]
+
+# Platform-specific settings
+[tool.cibuildwheel.windows]
+# Windows-specific environment
+environment = { PYROXA_PURE_PYTHON = "0", DISTUTILS_USE_SDK = "1" }
+
+[tool.cibuildwheel.linux]
+# Linux-specific settings
+before-all = [
+    "yum install -y gcc-c++ || apt-get update && apt-get install -y g++ || apk add --no-cache g++",
+]
+
+[tool.cibuildwheel.macos]
+# macOS-specific settings
+environment = { PYROXA_PURE_PYTHON = "0", MACOSX_DEPLOYMENT_TARGET = "10.9" }

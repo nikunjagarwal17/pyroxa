@@ -1,0 +1,89 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Development and IDE files
+.vscode/
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Output files and results
+*.csv
+*.log
+*.out
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+results.csv
+run.log
+
+# Examples folder outputs (filter generated files but keep source)
+examples/results.csv
+examples/*.png
+examples/*.jpg
+examples/*.jpeg
+examples/*.gif
+examples/*.svg
+examples/*.log
+examples/*.out
+
+# Build artifacts
+*.lib
+*.dll
+*.pyd
+*.so
+setup_bdist_output*.txt
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+temp/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitattributes
+
+# Scripts and files
+reinstall_pyroxa.py
+PUBLISHING_GUIDE.md
+mytest.py

@@ -1,0 +1,85 @@
+name: Test Installation Methods
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test-install-methods:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Test Method 1 - Editable Install (pip install -e .)
+      run: |
+        echo "Testing editable installation..."
+        pip install -r requirements.txt
+        pip install -e .
+        python -c "import pyroxa; print(f'Method 1 Success: PyroXa v{pyroxa.__version__}')"
+        pip uninstall -y pyroxa
+    
+    - name: Test Method 2 - Standard Install (pip install .)
+      run: |
+        echo "Testing standard installation..."
+        pip install .
+        python -c "import pyroxa; print(f'Method 2 Success: PyroXa v{pyroxa.__version__}')"
+        pip uninstall -y pyroxa
+    
+    - name: Test Method 3 - Build and Install Wheel
+      run: |
+        echo "Testing wheel installation..."
+        pip install build
+        python -m build
+        pip install dist/*.whl
+        python -c "import pyroxa; print(f'Method 3 Success: PyroXa v{pyroxa.__version__}')"
+    
+    - name: Verify all 132 functions available
+      run: |
+        python -c "
+        import pyroxa
+        total = len(pyroxa.__all__)
+        print(f'Total exported functions: {total}')
+        assert total == 132, f'Expected 132 functions, got {total}'
+        print('All 132 functions verified!')
+        "
+    
+    - name: Test essential functions
+      run: |
+        python -c "
+        import pyroxa
+        
+        # Test reaction kinetics
+        k = pyroxa.arrhenius_rate(A=1e10, Ea=50000, T=298.15)
+        print(f'Arrhenius rate: {k:.2e}')
+        
+        # Test batch reactor time calculation
+        time = pyroxa.batch_reactor_time(initial_conc=1.0, final_conc=0.2, rate_constant=0.15, order=1)
+        print(f'Batch reactor time: {time:.2f}')
+        
+        # Test CSTR volume calculation
+        volume = pyroxa.cstr_volume(flow_rate=10.0, rate_constant=0.5, conversion=0.8, order=1)
+        print(f'CSTR volume: {volume:.2f}')
+        
+        # Test thermodynamics
+        cp = pyroxa.heat_capacity_nasa(T=500.0, coeffs=[3.298677, 0.0014082404, -3.963222e-06, 5.641515e-09, -2.444854e-12])
+        print(f'Heat capacity: {cp:.2f} J/mol/K')
+        
+        # Test PFR volume calculation
+        pfr_vol = pyroxa.pfr_volume(flow_rate=10.0, rate_constant=0.5, conversion=0.8, order=1)
+        print(f'PFR volume: {pfr_vol:.2f}')
+        
+        print('All essential functions working!')
+        "
